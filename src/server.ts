@@ -44,10 +44,12 @@ app.use((_req, res) => {
 // Error handler (must be last)
 app.use(errorMiddleware);
 
-const PORT = parseInt(process.env.PORT || '3001', 10);
-
-app.listen(PORT, () => {
-  console.log(`sh-engagement backend running on port ${PORT}`);
-});
+// Só escuta em desenvolvimento local (Vercel usa o export default)
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = parseInt(process.env.PORT || '3001', 10);
+  app.listen(PORT, () => {
+    console.log(`sh-engagement backend running on port ${PORT}`);
+  });
+}
 
 export default app;
