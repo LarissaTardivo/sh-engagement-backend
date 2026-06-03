@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  teams       Team[]
+}
+
+model Team {
+  id              String        @id @default(cuid())
+  name            String
+  coordinatorName String?
+  whatsappLink    String?
+  assignments     String?
+  eventId         String
+  event           Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  participants    Participant[]
+}
+
+model Participant {
+  id            String        @id @default(cuid())
+  name          String
+  communityType CommunityType
+  prayerGroup   String?
+  cell          String?
+  teamId        String?
+  team          Team?         @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Cell {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  category  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PrayerGroup {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  category  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum CommunityType {
+  OBRA
+  COMUNIDADE_VIDA
+  COMUNIDADE_ALIANCA
+}
