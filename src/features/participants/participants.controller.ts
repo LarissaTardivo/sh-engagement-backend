@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { participantsService } from './participants.service';
 
 export class ParticipantsController {
-  async getByTeam(req: Request<{ teamId: string }>, res: Response, next: NextFunction): Promise<void> {
+  async getByTeam(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { teamId } = req.params;
       const participants = await participantsService.findByTeam(teamId);
@@ -12,7 +12,7 @@ export class ParticipantsController {
     }
   }
 
-  async create(req: Request<{ teamId: string }>, res: Response, next: NextFunction): Promise<void> {
+  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { teamId } = req.params;
       const { name, communityType, prayerGroup, cell } = req.body as {
@@ -21,25 +21,9 @@ export class ParticipantsController {
         prayerGroup?: string;
         cell?: string;
       };
-
-      if (!name) {
-        res.status(400).json({ error: 'name is required' });
-        return;
-      }
-
-      if (!communityType) {
-        res.status(400).json({ error: 'communityType is required' });
-        return;
-      }
-
-      const participant = await participantsService.create({
-        name,
-        communityType,
-        prayerGroup,
-        cell,
-        teamId,
-      });
-
+      if (!name) { res.status(400).json({ error: 'name is required' }); return; }
+      if (!communityType) { res.status(400).json({ error: 'communityType is required' }); return; }
+      const participant = await participantsService.create({ name, communityType, prayerGroup, cell, teamId });
       res.status(201).json(participant);
     } catch (err) {
       next(err);
@@ -54,10 +38,8 @@ export class ParticipantsController {
         prayerGroup?: string;
         cell?: string;
       };
-
       if (!name) { res.status(400).json({ error: 'name is required' }); return; }
       if (!communityType) { res.status(400).json({ error: 'communityType is required' }); return; }
-
       const participant = await participantsService.create({ name, communityType, prayerGroup, cell });
       res.status(201).json(participant);
     } catch (err) {
@@ -65,7 +47,7 @@ export class ParticipantsController {
     }
   }
 
-  async update(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
+  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const { name, communityType, prayerGroup, cell } = req.body as {
@@ -81,7 +63,7 @@ export class ParticipantsController {
     }
   }
 
-  async removeFromGroup(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
+  async removeFromGroup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       await participantsService.removeFromGroup(id);
@@ -91,7 +73,7 @@ export class ParticipantsController {
     }
   }
 
-  async remove(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
+  async remove(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       await participantsService.delete(id);

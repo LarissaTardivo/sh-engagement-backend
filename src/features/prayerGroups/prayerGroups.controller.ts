@@ -14,14 +14,19 @@ export class PrayerGroupsController {
       res.status(201).json(await prayerGroupsService.create(name ?? '', category ?? ''));
     } catch (e) { next(e); }
   }
-  async update(req: Request<{ id: string }>, res: Response, next: NextFunction) {
+  async update(req: Request, res: Response, next: NextFunction) {
     try {
+      const { id } = req.params;
       const { name, category } = req.body as { name?: string; category?: string };
-      res.json(await prayerGroupsService.update(req.params.id, { name, category }));
+      res.json(await prayerGroupsService.update(id, { name, category }));
     } catch (e) { next(e); }
   }
-  async remove(req: Request<{ id: string }>, res: Response, next: NextFunction) {
-    try { await prayerGroupsService.delete(req.params.id); res.status(204).send(); } catch (e) { next(e); }
+  async remove(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      await prayerGroupsService.delete(id);
+      res.status(204).send();
+    } catch (e) { next(e); }
   }
 }
 

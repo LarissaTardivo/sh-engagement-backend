@@ -11,7 +11,7 @@ export class TeamsController {
     }
   }
 
-  async getByEvent(req: Request<{ eventId: string }>, res: Response, next: NextFunction): Promise<void> {
+  async getByEvent(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { eventId } = req.params;
       const teams = await teamsService.findByEvent(eventId);
@@ -21,7 +21,7 @@ export class TeamsController {
     }
   }
 
-  async getById(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
+  async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const team = await teamsService.findById(id);
@@ -31,7 +31,7 @@ export class TeamsController {
     }
   }
 
-  async create(req: Request<{ eventId: string }>, res: Response, next: NextFunction): Promise<void> {
+  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { eventId } = req.params;
       const { name, coordinatorName, whatsappLink, assignments } = req.body as {
@@ -40,12 +40,7 @@ export class TeamsController {
         whatsappLink?: string;
         assignments?: string;
       };
-
-      if (!name) {
-        res.status(400).json({ error: 'name is required' });
-        return;
-      }
-
+      if (!name) { res.status(400).json({ error: 'name is required' }); return; }
       const team = await teamsService.create({ name, eventId, coordinatorName, whatsappLink, assignments });
       res.status(201).json(team);
     } catch (err) {
@@ -53,7 +48,7 @@ export class TeamsController {
     }
   }
 
-  async update(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
+  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const { name, coordinatorName, whatsappLink, assignments } = req.body as {
@@ -62,7 +57,6 @@ export class TeamsController {
         whatsappLink?: string;
         assignments?: string;
       };
-
       const team = await teamsService.update(id, { name, coordinatorName, whatsappLink, assignments });
       res.status(200).json(team);
     } catch (err) {
@@ -70,7 +64,7 @@ export class TeamsController {
     }
   }
 
-  async remove(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
+  async remove(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       await teamsService.delete(id);

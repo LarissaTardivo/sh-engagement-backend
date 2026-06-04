@@ -14,14 +14,19 @@ export class CellsController {
       res.status(201).json(await cellsService.create(name ?? '', category ?? ''));
     } catch (e) { next(e); }
   }
-  async update(req: Request<{ id: string }>, res: Response, next: NextFunction) {
+  async update(req: Request, res: Response, next: NextFunction) {
     try {
+      const { id } = req.params;
       const { name, category } = req.body as { name?: string; category?: string };
-      res.json(await cellsService.update(req.params.id, { name, category }));
+      res.json(await cellsService.update(id, { name, category }));
     } catch (e) { next(e); }
   }
-  async remove(req: Request<{ id: string }>, res: Response, next: NextFunction) {
-    try { await cellsService.delete(req.params.id); res.status(204).send(); } catch (e) { next(e); }
+  async remove(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      await cellsService.delete(id);
+      res.status(204).send();
+    } catch (e) { next(e); }
   }
 }
 

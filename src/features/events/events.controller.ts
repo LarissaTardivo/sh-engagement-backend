@@ -11,7 +11,7 @@ export class EventsController {
     }
   }
 
-  async getById(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
+  async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const event = await eventsService.findById(id);
@@ -24,12 +24,7 @@ export class EventsController {
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { name, description } = req.body as { name?: string; description?: string };
-
-      if (!name) {
-        res.status(400).json({ error: 'name is required' });
-        return;
-      }
-
+      if (!name) { res.status(400).json({ error: 'name is required' }); return; }
       const event = await eventsService.create({ name, description });
       res.status(201).json(event);
     } catch (err) {
@@ -37,7 +32,7 @@ export class EventsController {
     }
   }
 
-  async update(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
+  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const { name, description } = req.body as { name?: string; description?: string };
@@ -48,7 +43,7 @@ export class EventsController {
     }
   }
 
-  async remove(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
+  async remove(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       await eventsService.delete(id);
