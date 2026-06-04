@@ -13,7 +13,7 @@ export class EventsController {
 
   async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const event = await eventsService.findById(id);
       res.status(200).json(event);
     } catch (err) {
@@ -39,7 +39,7 @@ export class EventsController {
 
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const { name, description } = req.body as { name?: string; description?: string };
       const event = await eventsService.update(id, { name, description });
       res.status(200).json(event);
@@ -50,7 +50,7 @@ export class EventsController {
 
   async remove(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       await eventsService.delete(id);
       res.status(204).send();
     } catch (err) {

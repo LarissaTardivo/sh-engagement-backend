@@ -13,7 +13,7 @@ export class TeamsController {
 
   async getByEvent(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { eventId } = req.params;
+      const eventId = req.params.eventId as string;
       const teams = await teamsService.findByEvent(eventId);
       res.status(200).json(teams);
     } catch (err) {
@@ -23,7 +23,7 @@ export class TeamsController {
 
   async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const team = await teamsService.findById(id);
       res.status(200).json(team);
     } catch (err) {
@@ -33,7 +33,7 @@ export class TeamsController {
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { eventId } = req.params;
+      const eventId = req.params.eventId as string;
       const { name, coordinatorName, whatsappLink, assignments } = req.body as {
         name?: string;
         coordinatorName?: string;
@@ -55,7 +55,7 @@ export class TeamsController {
 
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const { name, coordinatorName, whatsappLink, assignments } = req.body as {
         name?: string;
         coordinatorName?: string;
@@ -72,7 +72,7 @@ export class TeamsController {
 
   async remove(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       await teamsService.delete(id);
       res.status(204).send();
     } catch (err) {

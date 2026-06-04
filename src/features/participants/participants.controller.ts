@@ -4,7 +4,7 @@ import { participantsService } from './participants.service';
 export class ParticipantsController {
   async getByTeam(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { teamId } = req.params;
+      const teamId = req.params.teamId as string;
       const participants = await participantsService.findByTeam(teamId);
       res.status(200).json(participants);
     } catch (err) {
@@ -14,7 +14,7 @@ export class ParticipantsController {
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { teamId } = req.params;
+      const teamId = req.params.teamId as string;
       const { name, communityType, prayerGroup, cell } = req.body as {
         name?: string;
         communityType?: string;
@@ -67,7 +67,7 @@ export class ParticipantsController {
 
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const { name, communityType, prayerGroup, cell } = req.body as {
         name?: string;
         communityType?: string;
@@ -83,7 +83,7 @@ export class ParticipantsController {
 
   async removeFromGroup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       await participantsService.removeFromGroup(id);
       res.status(204).send();
     } catch (err) {
@@ -93,7 +93,7 @@ export class ParticipantsController {
 
   async remove(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       await participantsService.delete(id);
       res.status(204).send();
     } catch (err) {
