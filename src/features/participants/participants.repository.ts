@@ -36,8 +36,16 @@ export class ParticipantsRepository {
     return prisma.participant.update({ where: { id }, data });
   }
 
-  async delete(id: string): Promise<void> {
-    await prisma.participant.delete({ where: { id } });
+  async findById(id: string) {
+    return prisma.participant.findUnique({ where: { id } });
+  }
+
+  async deleteAllByName(name: string): Promise<void> {
+    await prisma.participant.deleteMany({ where: { name } });
+  }
+
+  async deleteTeamParticipationsByName(name: string): Promise<void> {
+    await prisma.participant.deleteMany({ where: { name, teamId: { not: null } } });
   }
 }
 

@@ -14,6 +14,11 @@ router.patch('/:id', authMiddleware, (req, res, next) =>
   participantsController.update(req, res, next),
 );
 
+// DELETE /api/participants/:id/group — remove from group + clean team records
+router.delete('/:id/group', authMiddleware, (req, res, next) =>
+  participantsController.removeFromGroup(req, res, next),
+);
+
 // DELETE /api/participants/:id — admin
 router.delete('/:id', authMiddleware, (req, res, next) =>
   participantsController.remove(req, res, next),

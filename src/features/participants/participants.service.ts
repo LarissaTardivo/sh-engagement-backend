@@ -55,8 +55,8 @@ export class ParticipantsService {
   async update(id: string, data: {
     name?: string;
     communityType?: string;
-    prayerGroup?: string;
-    cell?: string;
+    prayerGroup?: string | null;
+    cell?: string | null;
   }) {
     if (data.communityType && !VALID_COMMUNITY_TYPES.includes(data.communityType as CommunityType)) {
       throw makeHttpError(`communityType must be one of: ${VALID_COMMUNITY_TYPES.join(', ')}`, 400);
@@ -78,17 +78,17 @@ export class ParticipantsService {
     });
   }
 
+  async removeFromGroup(id: string): Promise<void> {
+    const participant = await participantsRepository.findById(id);
+    if (!participant) throw makeHttpError('Participant not found', 404);
+    await participantsRepository.update(id, { cell: null, prayerGroup: null });
+    await participantsRepository.deleteTeamParticipationsByName(participant.name);
+  }
+
   async delete(id: string): Promise<void> {
-    // Attempt deletion — Prisma will throw P2025 if not found
-    try {
-      await participantsRepository.delete(id);
-    } catch (err: unknown) {
-      const prismaErr = err as { code?: string };
-      if (prismaErr.code === 'P2025') {
-        throw makeHttpError('Participant not found', 404);
-      }
-      throw err;
-    }
+    const participant = await participantsRepository.findById(id);
+    if (!participant) throw makeHttpError('Participant not found', 404);
+    await participantsRepository.deleteAllByName(participant.name);
   }
 }
 

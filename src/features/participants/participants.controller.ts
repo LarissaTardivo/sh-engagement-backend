@@ -81,6 +81,16 @@ export class ParticipantsController {
     }
   }
 
+  async removeFromGroup(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      await participantsService.removeFromGroup(id);
+      res.status(204).send();
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async remove(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
