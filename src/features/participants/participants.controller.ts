@@ -2,9 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import { participantsService } from './participants.service';
 
 export class ParticipantsController {
-  async getByTeam(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getByTeam(req: Request<{ teamId: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
-      const teamId = req.params.teamId as string;
+      const { teamId } = req.params;
       const participants = await participantsService.findByTeam(teamId);
       res.status(200).json(participants);
     } catch (err) {
@@ -12,9 +12,9 @@ export class ParticipantsController {
     }
   }
 
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async create(req: Request<{ teamId: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
-      const teamId = req.params.teamId as string;
+      const { teamId } = req.params;
       const { name, communityType, prayerGroup, cell } = req.body as {
         name?: string;
         communityType?: string;
@@ -65,9 +65,9 @@ export class ParticipantsController {
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async update(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
-      const id = req.params.id as string;
+      const { id } = req.params;
       const { name, communityType, prayerGroup, cell } = req.body as {
         name?: string;
         communityType?: string;
@@ -81,9 +81,9 @@ export class ParticipantsController {
     }
   }
 
-  async removeFromGroup(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async removeFromGroup(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
-      const id = req.params.id as string;
+      const { id } = req.params;
       await participantsService.removeFromGroup(id);
       res.status(204).send();
     } catch (err) {
@@ -91,9 +91,9 @@ export class ParticipantsController {
     }
   }
 
-  async remove(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async remove(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
-      const id = req.params.id as string;
+      const { id } = req.params;
       await participantsService.delete(id);
       res.status(204).send();
     } catch (err) {

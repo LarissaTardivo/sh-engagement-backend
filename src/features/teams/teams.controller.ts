@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { teamsService } from './teams.service';
 
 export class TeamsController {
-  async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getAll(_req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const teams = await teamsService.findAll();
       res.status(200).json(teams);
@@ -11,9 +11,9 @@ export class TeamsController {
     }
   }
 
-  async getByEvent(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getByEvent(req: Request<{ eventId: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
-      const eventId = req.params.eventId as string;
+      const { eventId } = req.params;
       const teams = await teamsService.findByEvent(eventId);
       res.status(200).json(teams);
     } catch (err) {
@@ -21,9 +21,9 @@ export class TeamsController {
     }
   }
 
-  async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getById(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
-      const id = req.params.id as string;
+      const { id } = req.params;
       const team = await teamsService.findById(id);
       res.status(200).json(team);
     } catch (err) {
@@ -31,9 +31,9 @@ export class TeamsController {
     }
   }
 
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async create(req: Request<{ eventId: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
-      const eventId = req.params.eventId as string;
+      const { eventId } = req.params;
       const { name, coordinatorName, whatsappLink, assignments } = req.body as {
         name?: string;
         coordinatorName?: string;
@@ -53,9 +53,9 @@ export class TeamsController {
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async update(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
-      const id = req.params.id as string;
+      const { id } = req.params;
       const { name, coordinatorName, whatsappLink, assignments } = req.body as {
         name?: string;
         coordinatorName?: string;
@@ -70,9 +70,9 @@ export class TeamsController {
     }
   }
 
-  async remove(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async remove(req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
-      const id = req.params.id as string;
+      const { id } = req.params;
       await teamsService.delete(id);
       res.status(204).send();
     } catch (err) {
