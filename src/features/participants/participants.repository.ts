@@ -40,6 +40,10 @@ export class ParticipantsRepository {
     return prisma.participant.findUnique({ where: { id } });
   }
 
+  async removeFromTeam(id: string): Promise<void> {
+    await prisma.participant.update({ where: { id }, data: { teamId: null } });
+  }
+
   async deleteAllByName(name: string): Promise<void> {
     await prisma.participant.deleteMany({ where: { name } });
   }

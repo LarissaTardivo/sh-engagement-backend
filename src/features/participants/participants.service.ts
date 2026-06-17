@@ -88,7 +88,7 @@ export class ParticipantsService {
   async delete(id: string): Promise<void> {
     const participant = await participantsRepository.findById(id);
     if (!participant) throw makeHttpError('Participant not found', 404);
-    await participantsRepository.deleteAllByName(participant.name);
+    await participantsRepository.removeFromTeam(id);
   }
 }
 
