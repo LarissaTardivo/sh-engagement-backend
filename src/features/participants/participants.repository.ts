@@ -9,6 +9,17 @@ export class ParticipantsRepository {
     });
   }
 
+  async findStandalone(name: string, cell?: string, prayerGroup?: string) {
+    return prisma.participant.findFirst({
+      where: {
+        name,
+        teamId: null,
+        ...(cell ? { cell } : {}),
+        ...(prayerGroup ? { prayerGroup } : {}),
+      },
+    });
+  }
+
   async create(data: {
     name: string;
     communityType: CommunityType;
@@ -40,8 +51,24 @@ export class ParticipantsRepository {
     return prisma.participant.findUnique({ where: { id } });
   }
 
+  async deleteById(id: string): Promise<void> {
+    await prisma.participant.delete({ where: { id } });
+  }
+
   async removeFromTeam(id: string): Promise<void> {
     await prisma.participant.update({ where: { id }, data: { teamId: null } });
+  }
+
+  async deleteDuplicateStandalones(name: string, cell?: string, prayerGroup?: string, keepId?: string): Promise<void> {
+    await prisma.participant.deleteMany({
+      where: {
+        name,
+        teamId: null,
+        ...(cell ? { cell } : {}),
+        ...(prayerGroup ? { prayerGroup } : {}),
+        ...(keepId ? { id: { not: keepId } } : {}),
+      },
+    });
   }
 
   async deleteAllByName(name: string): Promise<void> {
