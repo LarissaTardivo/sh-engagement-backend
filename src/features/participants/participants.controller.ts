@@ -50,13 +50,14 @@ export class ParticipantsController {
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      const { name, communityType, prayerGroup, cell } = req.body as {
+      const { name, communityType, prayerGroup, cell, subscribed } = req.body as {
         name?: string;
         communityType?: string;
         prayerGroup?: string;
         cell?: string;
+        subscribed?: boolean;
       };
-      const participant = await participantsService.update(id, { name, communityType, prayerGroup, cell });
+      const participant = await participantsService.update(id, { name, communityType, prayerGroup, cell, subscribed });
       res.status(200).json(participant);
     } catch (err) {
       next(err);

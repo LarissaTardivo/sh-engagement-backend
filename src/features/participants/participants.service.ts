@@ -57,6 +57,7 @@ export class ParticipantsService {
     communityType?: string;
     prayerGroup?: string | null;
     cell?: string | null;
+    subscribed?: boolean;
   }) {
     if (data.communityType && !VALID_COMMUNITY_TYPES.includes(data.communityType as CommunityType)) {
       throw makeHttpError(`communityType must be one of: ${VALID_COMMUNITY_TYPES.join(', ')}`, 400);
@@ -73,8 +74,9 @@ export class ParticipantsService {
     return participantsRepository.update(id, {
       name: data.name,
       communityType,
-      prayerGroup: communityType === 'OBRA' ? data.prayerGroup : null,
-      cell: communityType && communityType !== 'OBRA' ? data.cell : null,
+      prayerGroup: communityType === undefined ? undefined : communityType === 'OBRA' ? data.prayerGroup : null,
+      cell: communityType === undefined ? undefined : communityType !== 'OBRA' ? data.cell : null,
+      subscribed: data.subscribed,
     });
   }
 

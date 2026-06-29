@@ -43,6 +43,7 @@ export class ParticipantsRepository {
     communityType?: CommunityType;
     prayerGroup?: string | null;
     cell?: string | null;
+    subscribed?: boolean;
   }) {
     return prisma.participant.update({ where: { id }, data });
   }
